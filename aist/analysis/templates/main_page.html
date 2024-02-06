@@ -1,22 +1,11 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
-    <!-- Add any necessary CSS files -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
+{% block title %}Team Analysis - AIST{% endblock %}
 
-<body>
-    <!-- Dark theme toggle button -->
-    <button id="dark-theme-toggle">Toggle Dark Theme</button>
-
+{% block content %}
     <!-- Page content -->
     <div class="container">
-        <h1>Welcome to the AI Sports Analysis Tool (AIST)</h1>
+        <h2>AI Sports Analysis Tool (AIST)</h2>
         <p>
             In this project, we're using artificial intelligence to analyze datasets of team and player stats in sports.
             Our goal is to uncover patterns in the data, revolutionizing how teams approach their game and offering
@@ -31,9 +20,4 @@
         <a href="{% url 'team_analysis' %}"><button>Team-based Analysis</button></a>
         <a href="{% url 'player_analysis' %}"><button>Player-based Analysis</button></a>
     </div>
-
-    <!-- JavaScript to handle dark theme toggle -->
-    <script src="{% static 'js/dark-theme-toggle.js' %}"></script>
-</body>
-
-</html>
+{% endblock %}

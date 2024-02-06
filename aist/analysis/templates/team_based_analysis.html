@@ -1,22 +1,13 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
-    <!-- Add any necessary CSS files -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
+{% block title %}Team Analysis - AIST{% endblock %}
 
-<body>
-    <!-- Dark theme toggle button -->
-    <button id="dark-theme-toggle">Toggle Dark Theme</button>
-
+{% block content %}
+    <!-- Page content -->
     <!-- Page content -->
     <div class="container">
-        <h1>Team-Based Analysis</h1>
+        <h2>AI Sports Analysis Tool (AIST)</h2>
+        <h2>Player Analysis</h2>
 
         {% if empty_database %}
         <p>No data available in the database.</p>
@@ -49,7 +40,4 @@
         <!-- Display analysis results here based on selected_team_data and selected_year_data -->
         {% endif %}
     </div>
-
-</body>
-
-</html>
+{% endblock %}
