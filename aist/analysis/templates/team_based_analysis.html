@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <!-- Add any necessary CSS files -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <!-- Dark theme toggle button -->
+    <button id="dark-theme-toggle">Toggle Dark Theme</button>
+
+    <!-- Page content -->
+    <div class="container">
+        <h1>Team-Based Analysis</h1>
+
+        {% if empty_database %}
+        <p>No data available in the database.</p>
+        {% else %}
+        <form method="get" action="{% url 'team_analysis' %}">
+            <label for="team">Select Team:</label>
+            <select name="team" id="team">
+                {% for team in teams %}
+                    <option value="{{ team.id }}" {% if team.id == selected_team %}selected{% endif %}>
+                        {{ team.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="year">Select Year:</label>
+            <select name="year" id="year">
+                {% for year in years %}
+                    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
+                        {{ year }}
+                    </option>
+                {% endfor %}
+            </select>            
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <h2>Selected Team: {{ selected_team_data.name }} ({{ selected_team_data.city }})</h2>
+        <h2>Selected Year: {{ selected_year_data }}</h2>
+
+        <!-- Display analysis results here based on selected_team_data and selected_year_data -->
+        {% endif %}
+    </div>
+
+</body>
+
+</html>
