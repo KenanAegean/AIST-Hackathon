@@ -76,3 +76,34 @@ def player_based_analysis(request):
         'selected_team_data': selected_team_data,
         'selected_year_data': selected_year_data,
     })
+
+def match_analysis(request):
+    teams = Team.objects.all()
+
+    selected_home_team = request.GET.get('team', '')
+    selected_guest_team = request.GET.get('team', '')
+
+    if not teams.count == 0 or not teams:
+        # Handle the case when the database is empty
+        teams = []
+
+    selected_home_team_data = None
+    selected_guest_team_data = None
+
+    try:
+        selected_home_team_int = int(selected_home_team)
+        selected_guest_team_int = int(selected_guest_team)
+        selected_home_team_data = Team.objects.get(id=selected_home_team_int)
+        selected_guest_team_data = Team.objects.get(id=selected_guest_team_int)
+    except ValueError:
+        pass
+    
+    # Your analysis logic here 
+
+    return render(request, 'match_analysis.html', {
+        'teams': teams,
+        'selected_home_team': selected_home_team,
+        'selected_guest_team': selected_guest_team,
+        'selected_home_team_data': selected_home_team_data,
+        'selected_guest_team_data': selected_guest_team_data,
+    })

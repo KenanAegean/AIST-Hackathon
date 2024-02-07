@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Team Analysis - AIST{% endblock %}
+
+{% block content %}
+<!-- Page content -->
+<div class="container">
+    <h2>AI Sports Analysis Tool (AIST)</h2>
+    <h2>Match Analysis</h2>
+
+    {% if empty_database %}
+        <p>No data available in the database.</p>
+        {% else %}
+            <form method="get" action="{% url 'match_analysis' %}">
+                <label for="home_team">Select Team Home:</label>
+                <select name="home_team" id="home_team">
+                    {% for team in teams %}
+                        <option value="{{ team.id }}" {% if team.id == selected_home_team %}selected{% endif %}>
+                            {{ team.name }}
+                        </option>
+                    {% endfor %}
+        
+                </select>
+                <br>
+                <label for="guest_team">Select Team Guest:</label>
+                <select name="guest_team" id="guest_team">
+                    {% for team in teams %}
+                        <option value="{{ team.id }}" {% if team.id == selected_guest_team %}selected{% endif %}>
+                            {{ team.name }}
+                        </option>
+                    {% endfor %}
+                </select>            
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+
+    <h2>Selected Team Home: {{ selected_home_team_data.name }} ({{ selected_home_team_data.city }})</h2>
+    <h2>Selected Team Guest: {{ selected_guest_team_data.name }} ({{ selected_guest_team_data.city }})</h2>
+    {% endif %}
+</div>
+{% endblock %}
