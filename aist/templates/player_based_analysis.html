@@ -9,50 +9,32 @@
         {% if empty_database %}
         <p>No data available in the database.</p>
         {% else %}
-        <form method="get" action="{% url 'player_analysis' %}">
-            <label for="team">Select Team:</label>
-            <select name="year" id="year">
-                {% for year in years %}
-                    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
-                        {{ year }}
-                    </option>
-                {% endfor %}
-            </select>
-            
-
-            <label for="year">Select Year:</label>
-            <select name="year" id="year">
-                {% for year in years %}
-                    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
-                        {{ year }}
-                    </option>
-                {% endfor %}
-            </select>            
-
-            <input type="submit" value="Submit">
+        <form method="post">
+            {% csrf_token %}
+            <label for="player_name">Enter Player Name:</label>
+            <input type="text" id="player_name" name="player_name">
+            <button type="submit">Analyze</button>
         </form>
-
-        <h2>Selected Team: {{ selected_team_data.name }} ({{ selected_team_data.city }})</h2>
-        <h2>Selected Year: {{ selected_year_data }}</h2>
-
-        {% if players %}
-        <form method="get" action="{% url 'player_analysis' %}">
-            <label for="player">Select Player:</label>
-            <select name="player" id="player">
-                {% for player in players %}
-                <option value="{{ player.id }}">{{ player.name }}</option>
-                {% endfor %}
-            </select>
-
-            <input type="hidden" name="team" value="{{ selected_team }}">
-            <input type="hidden" name="year" value="{{ selected_year }}">
-
-            <input type="submit" value="Submit">
-        </form>
-
-        <!-- Display analysis results here based on selected_team_data, selected_year_data, and selected_player_data -->
-        {% else %}
-        <p>No players available for the selected team and year.</p>
+        
+        {% if player_details %}
+        <h2>Player Details</h2>
+        <p>Position: {{ player_details.Pos }}</p>
+        <p>Age: {{ player_details.Age }}</p>
+        <!-- Add more player details as needed -->
+        {% endif %}
+        
+        {% if predicted_performance %}
+        <h2>Predicted Performance</h2>
+        <p>Predicted Points Scored: {{ predicted_performance }}</p>
+        {% endif %}
+        
+        {% if comparison_results %}
+        <h2>Comparison with Other Players (Player Efficiency Rating)</h2>
+        <ul>
+            {% for player, data in comparison_results.items %}
+            <li>{{ player }}: {{ data.player_per }} vs {{ data.other_player_per }} ({{ data.comparison }})</li>
+            {% endfor %}
+        </ul>
         {% endif %}
         {% endif %}
     </div>

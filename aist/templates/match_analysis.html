@@ -8,33 +8,32 @@
     <h2>Match Analysis</h2>
 
     {% if empty_database %}
-        <p>No data available in the database.</p>
-        {% else %}
-            <form method="get" action="{% url 'match_analysis' %}">
-                <label for="home_team">Select Team Home:</label>
-                <select name="home_team" id="home_team">
-                    {% for team in teams %}
-                        <option value="{{ team.id }}" {% if team.id == selected_home_team %}selected{% endif %}>
-                            {{ team.name }}
-                        </option>
-                    {% endfor %}
+    <p>No data available in the database.</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="team1">Select Team 1:</label>
+        <select id="team1" name="team1">
+            {% for team in teams %}
+            <option value="{{ team.Team }}">{{ team.Team }}</option>
+            {% endfor %}
+        </select>
         
-                </select>
-                <br>
-                <label for="guest_team">Select Team Guest:</label>
-                <select name="guest_team" id="guest_team">
-                    {% for team in teams %}
-                        <option value="{{ team.id }}" {% if team.id == selected_guest_team %}selected{% endif %}>
-                            {{ team.name }}
-                        </option>
-                    {% endfor %}
-                </select>            
-                <br>
-                <input type="submit" value="Submit">
-            </form>
-
-    <h2>Selected Team Home: {{ selected_home_team_data.name }} ({{ selected_home_team_data.city }})</h2>
-    <h2>Selected Team Guest: {{ selected_guest_team_data.name }} ({{ selected_guest_team_data.city }})</h2>
+        <label for="team2">Select Team 2:</label>
+        <select id="team2" name="team2">
+            {% for team in teams %}
+            <option value="{{ team.Team }}">{{ team.Team }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Predict</button>
+    </form>
+    
+    {% if match_prediction %}
+    <h2>Match Prediction</h2>
+    <p>{{ team1_name }} vs {{ team2_name }}</p>
+    <p>Probability of {{ team1_name }} winning: {{ match_prediction[0][1] }}</p>
+    <p>Probability of {{ team2_name }} winning: {{ match_prediction[0][0] }}</p>
+    {% endif %}
     {% endif %}
 </div>
 {% endblock %}

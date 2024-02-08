@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import MVP, Player, Team
+from .utils import predict_player_performance, compare_players, predict_match_outcome
 
 def main_page(request):
     return render(request, 'main_page.html')
@@ -77,7 +78,7 @@ def player_based_analysis(request):
         'selected_year_data': selected_year_data,
     })
 
-def match_analysis(request):
+def match_analysis_old(request):
     teams = Team.objects.all()
 
     selected_home_team = request.GET.get('team', '')
@@ -107,3 +108,44 @@ def match_analysis(request):
         'selected_home_team_data': selected_home_team_data,
         'selected_guest_team_data': selected_guest_team_data,
     })
+
+
+def player_analysis(request):
+    if request.method == 'POST':
+        player_name = request.POST.get('player_name')
+        
+        # Predict player performance
+        predicted_performance = predict_player_performance(player_name)
+        
+        # Compare players
+        comparison_results = compare_players(player_name)
+        
+        # Retrieve additional player details for display
+        player_details = Player.objects.get(Player=player_name)
+        
+        return render(request, 'player_based_analysis.html', {
+            'player_name': player_name,
+            'predicted_performance': predicted_performance,
+            'comparison_results': comparison_results,
+            'player_details': player_details
+        })
+    return render(request, 'player_based_analysis.html')
+
+def match_analysis(request):
+    teams = Team.objects.all()
+    
+    if request.method == 'POST':
+        team1_name = request.POST.get('team1')
+        team2_name = request.POST.get('team2')
+        
+        # Predict match outcome
+        match_prediction = predict_match_outcome(team1_name, team2_name)
+        
+        return render(request, 'match_analysis.html', {
+            'teams': teams,
+            'team1_name': team1_name,
+            'team2_name': team2_name,
+            'match_prediction': match_prediction
+        })
+    
+    return render(request, 'match_analysis.html', {'teams': teams})

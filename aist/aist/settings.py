@@ -78,8 +78,6 @@ TEMPLATES = [
 
 STATICFILES_DIRS = [
     # Static files specific to the analysis app
-    os.path.join(BASE_DIR, 'analysis', 'static'),
-    # Global static files for the entire project
     os.path.join(BASE_DIR, 'static'),
 ]
 
