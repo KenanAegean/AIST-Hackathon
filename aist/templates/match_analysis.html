@@ -6,9 +6,6 @@
 <!-- Page content -->
 <div class="container">
     <h2>Match Analysis</h2>
-
-    {% if empty_database %}
-    <p>No data available in the database.</p>
     <form method="post">
         {% csrf_token %}
         <label for="team1">Select Team 1:</label>
@@ -17,23 +14,22 @@
             <option value="{{ team.Team }}">{{ team.Team }}</option>
             {% endfor %}
         </select>
-        
+        <br>
         <label for="team2">Select Team 2:</label>
         <select id="team2" name="team2">
             {% for team in teams %}
             <option value="{{ team.Team }}">{{ team.Team }}</option>
             {% endfor %}
         </select>
-        
+        <br>
         <button type="submit">Predict</button>
     </form>
     
     {% if match_prediction %}
     <h2>Match Prediction</h2>
     <p>{{ team1_name }} vs {{ team2_name }}</p>
-    <p>Probability of {{ team1_name }} winning: {{ match_prediction[0][1] }}</p>
-    <p>Probability of {{ team2_name }} winning: {{ match_prediction[0][0] }}</p>
-    {% endif %}
+    <p>Probability of {{ team1_name }} winning: {{ match_prediction.0.1 }}</p>
+    <p>Probability of {{ team2_name }} winning: {{ match_prediction.0.0 }}</p>
     {% endif %}
 </div>
 {% endblock %}

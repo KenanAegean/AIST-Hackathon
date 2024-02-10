@@ -49,17 +49,20 @@ def predict_match_outcome(team1_name, team2_name):
     team1 = Team.objects.get(Team=team1_name)
     team2 = Team.objects.get(Team=team2_name)
     
+    # Get team statistics
+    team1_stats = [team1.WL_percent, team1.PS_per_game, team1.PA_per_game, team1.SRS]
+    team2_stats = [team2.WL_percent, team2.PS_per_game, team2.PA_per_game, team2.SRS]
+    
     # Perform some advanced analysis (e.g., use logistic regression to predict match outcome)
     # For demonstration purposes, let's assume we're predicting based on team statistics
-    X = np.array([team1[['W/L%', 'PS/G', 'PA/G', 'SRS']], team2[['W/L%', 'PS/G', 'PA/G', 'SRS']]])
-    y = np.array([1, 0])  # 1 for team1 win, 0 for team2 win
+    X = np.array([team1_stats, team2_stats])
     
     # Train a logistic regression model
     model = LogisticRegression()
-    model.fit(X, y)
+    model.fit(X, [1, 0])  # Labels should be passed directly, not in array
     
     # Make prediction
-    match_prediction = model.predict_proba([X.mean(axis=0)])
+    match_prediction = model.predict_proba(X.mean(axis=0).reshape(1, -1))
     
     return match_prediction
 
