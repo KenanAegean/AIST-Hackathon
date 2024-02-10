@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Team Analysis - AIST{% endblock %}
+
+{% block content %}
+    <!-- Page content -->
+    <!-- Page content -->
+    <div class="container">
+        <h2>Team Analysis</h2>
+
+        {% if empty_database %}
+        <p>No data available in the database.</p>
+        {% else %}
+        <form method="get" action="{% url 'team_analysis' %}">
+            <label for="team">Select Team:</label>
+            <select name="team" id="team">
+                {% for team in teams %}
+                    <option value="{{ team.id }}" {% if team.id == selected_team %}selected{% endif %}>
+                        {{ team.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="year">Select Year:</label>
+            <select name="year" id="year">
+                {% for year in years %}
+                    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
+                        {{ year }}
+                    </option>
+                {% endfor %}
+            </select>            
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <h2>Selected Team: {{ selected_team_data.name }} ({{ selected_team_data.city }})</h2>
+        <h2>Selected Year: {{ selected_year_data }}</h2>
+
+        <!-- Display analysis results here based on selected_team_data and selected_year_data -->
+        {% endif %}
+    </div>
+{% endblock %}

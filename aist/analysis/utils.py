@@ -62,3 +62,22 @@ def predict_match_outcome(team1_name, team2_name):
     match_prediction = model.predict_proba([X.mean(axis=0)])
     
     return match_prediction
+
+def predict_team_performance(team_name):
+    # Retrieve team data from the database
+    team = Team.objects.get(Team=team_name)
+    
+    # Perform some advanced analysis (e.g., use linear regression to predict performance)
+    # For demonstration purposes, let's assume we're predicting based on historical team statistics
+    X = np.array([team[['Year', 'W/L%', 'PS/G', 'PA/G', 'SRS']]])
+    y = np.array(team[['W']])
+    
+    # Train a linear regression model
+    model = LinearRegression()
+    model.fit(X, y)
+    
+    # Make prediction for the next year
+    next_year = team['Year'] + 1
+    performance_prediction = model.predict([[next_year, team['W/L%'], team['PS/G'], team['PA/G'], team['SRS']]])
+    
+    return performance_prediction

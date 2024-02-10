@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import MVP, Player, Team
-from .utils import predict_player_performance, compare_players, predict_match_outcome
+from .utils import predict_player_performance, compare_players, predict_match_outcome, predict_team_performance
+
 
 def main_page(request):
     return render(request, 'main_page.html')
@@ -149,3 +150,20 @@ def match_analysis(request):
         })
     
     return render(request, 'match_analysis.html', {'teams': teams})
+
+def team_analysis(request):
+    teams = Team.objects.all()
+    
+    if request.method == 'POST':
+        team_name = request.POST.get('team_name')
+        
+        # Predict team performance
+        performance_prediction = predict_team_performance(team_name)
+        
+        return render(request, 'team_based_analysis.html', {
+            'teams': teams,
+            'team_name': team_name,
+            'performance_prediction': performance_prediction
+        })
+    
+    return render(request, 'team_based_analysis.html', {'teams': teams})

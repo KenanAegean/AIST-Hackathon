@@ -4,39 +4,28 @@
 
 {% block content %}
     <!-- Page content -->
-    <!-- Page content -->
     <div class="container">
         <h2>Team Analysis</h2>
 
         {% if empty_database %}
         <p>No data available in the database.</p>
         {% else %}
-        <form method="get" action="{% url 'team_analysis' %}">
-            <label for="team">Select Team:</label>
-            <select name="team" id="team">
+        <form method="post">
+            {% csrf_token %}
+            <label for="team_name">Select Team:</label>
+            <select id="team_name" name="team_name">
                 {% for team in teams %}
-                    <option value="{{ team.id }}" {% if team.id == selected_team %}selected{% endif %}>
-                        {{ team.name }}
-                    </option>
+                <option value="{{ team.Team }}">{{ team.Team }}</option>
                 {% endfor %}
             </select>
-
-            <label for="year">Select Year:</label>
-            <select name="year" id="year">
-                {% for year in years %}
-                    <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
-                        {{ year }}
-                    </option>
-                {% endfor %}
-            </select>            
-
-            <input type="submit" value="Submit">
+            
+            <button type="submit">Analyze</button>
         </form>
-
-        <h2>Selected Team: {{ selected_team_data.name }} ({{ selected_team_data.city }})</h2>
-        <h2>Selected Year: {{ selected_year_data }}</h2>
-
-        <!-- Display analysis results here based on selected_team_data and selected_year_data -->
+        
+        {% if performance_prediction %}
+        <h2>Performance Prediction</h2>
+        <p>Predicted Wins for Next Year: {{ performance_prediction }}</p>
+        {% endif %}
         {% endif %}
     </div>
 {% endblock %}
