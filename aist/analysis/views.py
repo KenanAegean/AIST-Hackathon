@@ -1,4 +1,6 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from .models import MVP, Player, Team
 from .utils import predict_player_performance, compare_players, predict_match_outcome, predict_team_performance
 
@@ -112,25 +114,53 @@ def match_analysis_old(request):
 
 
 def player_analysis(request):
+    player_team = Player.objects.all()
+    filtered_players = []
+
     if request.method == 'POST':
-        player_name = request.POST.get('player_name')
-        
-        # Predict player performance
-        predicted_performance = predict_player_performance(player_name)
-        
-        # Compare players
-        comparison_results = compare_players(player_name)
-        
-        # Retrieve additional player details for display
-        player_details = Player.objects.get(Player=player_name)
-        
-        return render(request, 'player_based_analysis.html', {
-            'player_name': player_name,
-            'predicted_performance': predicted_performance,
-            'comparison_results': comparison_results,
-            'player_details': player_details
-        })
-    return render(request, 'player_based_analysis.html')
+        player_team = Player.objects.all()
+        filtered_players = []
+
+        # Get the selected team and year from the session (if they exist)
+        team = request.session.get('team')
+        year = request.session.get('year')
+
+        if request.method == 'POST':
+            team = request.POST.get('team')
+            year = request.POST.get('year')
+            
+            # Store the selected team and year in the session
+            request.session['team'] = team
+            request.session['year'] = year
+            
+            # Filter players by team and year
+            filtered_players = Player.objects.filter(Tm=team, Year=year).values_list('Player', flat=True)
+
+        if 'player_name' in request.POST:
+            player_name = request.POST.get('player_name')
+
+            # Get the selected player's details
+            selected_player = Player.objects.get(Player=player_name, Tm="TOT", Year="2000")
+            
+            # Predict player performance
+            predicted_performance = predict_player_performance(player_name, "TOT", "2000")
+            
+            # Compare players
+            comparison_results = compare_players(player_name, "2000", "2000")
+            
+            # Retrieve additional player details for display
+            player_details = Player.objects.get(Player=player_name, Tm=team, Year=year)
+            
+            return render(request, 'player_based_analysis.html', {
+                'teams': player_team,
+                'filtered_players': filtered_players,
+                'player_name': player_name,
+                'predicted_performance': predicted_performance,
+                'comparison_results': comparison_results,
+                'player_details': player_details
+            })
+    
+    return render(request, 'player_based_analysis.html', {'teams': player_team, 'filtered_players': filtered_players})
 
 def match_analysis(request):
     teams = Team.objects.all()

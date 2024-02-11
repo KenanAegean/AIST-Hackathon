@@ -2,30 +2,33 @@ from .models import Player, MVP, Team
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
-def predict_player_performance(player_name):
+def predict_player_performance(player_name, team, year):
     # Retrieve player data from the database
-    player = Player.objects.get(Player=player_name)
+    player = Player.objects.get(Player=player_name, Tm=team, Year=year)
     
     # Perform some advanced analysis (e.g., use machine learning model to predict performance)
     # For demonstration purposes, let's assume we're using linear regression to predict points scored
-    X = np.array(player[['Age', 'G', 'GS', 'MP', 'FG%', '3P%', 'FT%', 'TRB', 'AST', 'STL', 'BLK', 'PTS']])
-    y = np.array(player['PTS'])
+    X = np.array([[
+        player.Age, player.G, player.GS, player.MP, player.FG_percent, player.ThreeP_percent,
+        player.FT_percent, player.TRB, player.AST, player.STL, player.BLK
+    ]])  # Remove 'PTS' from features since it's the target variable
+    y = np.array(player.PTS)
     
     # Train a linear regression model
     model = LinearRegression()
     model.fit(X, y)
     
     # Make prediction
-    predicted_performance = model.predict([X.mean(axis=0)])  # Predict based on average player statistics
+    predicted_performance = model.predict(X)  # No need to reshape input data
     
     return predicted_performance
 
-def compare_players(player_name):
+def compare_players(player_name, team, year):
     # Retrieve player data from the database
-    player = Player.objects.get(Player=player_name)
+    player = Player.objects.get(Player=player_name, Tm=team, Year=year)
     
-    # Get MVPs data for comparison
-    other_players = MVP.objects.exclude(Player=player_name)
+    # Get other players data for comparison
+    other_players = MVP.objects.exclude(Player=player_name, Tm=team, Year=year)
     
     comparison_results = {}
     for other_player in other_players:
@@ -72,15 +75,15 @@ def predict_team_performance(team_name):
     
     # Perform some advanced analysis (e.g., use linear regression to predict performance)
     # For demonstration purposes, let's assume we're predicting based on historical team statistics
-    X = np.array([team[['Year', 'W/L%', 'PS/G', 'PA/G', 'SRS']]])
-    y = np.array(team[['W']])
+    X = np.array([[team.Year, team.WL_percent, team.PS_per_game, team.PA_per_game, team.SRS]])
+    y = np.array([team.W])
     
     # Train a linear regression model
     model = LinearRegression()
     model.fit(X, y)
     
     # Make prediction for the next year
-    next_year = team['Year'] + 1
-    performance_prediction = model.predict([[next_year, team['W/L%'], team['PS/G'], team['PA/G'], team['SRS']]])
+    next_year = team.Year + 1
+    performance_prediction = model.predict([[next_year, team.WL_percent, team.PS_per_game, team.PA_per_game, team.SRS]])
     
     return performance_prediction
