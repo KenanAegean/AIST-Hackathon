@@ -11,21 +11,21 @@
             <label for="team">Select Team:</label>
             <select id="team" name="team">
                 {% for team in teams %}
-                <option value="{{ team.Tm }}">{{ team.Tm }}</option>
+                <option value="{{ team }}">{{ team }}</option>
                 {% endfor %}
             </select>
             <label for="year">Select Year:</label>
-            <input type="number" id="year" name="year">
+            <input type="number" id="year" name="year" min="1990" max="2030">
             <button type="submit">Filter</button>
         </form>
         
         {% if filtered_players %}
         <form method="post">
             {% csrf_token %}
-            <label for="player_name">Select Player:</label>
-            <select id="player_name" name="player_name">
+            <label for="player_id">Select Player:</label>
+            <select id="player_id" name="player_id">
                 {% for player in filtered_players %}
-                <option value="{{ player }}">{{ player }}</option>
+                <option value="{{ player.id }}">{{ player.Player }}</option>
                 {% endfor %}
             </select>
             <button type="submit">Analyze</button>
@@ -36,12 +36,18 @@
         <h2>Player Details</h2>
         <p>Position: {{ player_details.Pos }}</p>
         <p>Age: {{ player_details.Age }}</p>
+        <p>Team: {{ player_details.Tm }}</p>
         <!-- Add more player details as needed -->
         {% endif %}
         
         {% if predicted_performance %}
         <h2>Predicted Performance</h2>
         <p>Predicted Points Scored: {{ predicted_performance }}</p>
+        {% for player, data in comparison_results.items %}
+            {% if forloop.first %}
+            <p>Player Efficiency Rating: %{{ data.player_per_hundered|floatformat:"2" }}</p>
+            {%endif%}
+        {% endfor %}
         {% endif %}
         
         {% if comparison_results %}
@@ -51,6 +57,6 @@
             <li>{{ player }}: {{ data.player_per }} vs {{ data.other_player_per }} ({{ data.comparison }})</li>
             {% endfor %}
         </ul>
-        {% endif %}
+        {% endif %}        
     </div>
 {% endblock %}

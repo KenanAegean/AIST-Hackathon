@@ -2,50 +2,54 @@ from .models import Player, MVP, Team
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
-def predict_player_performance(player_name, team, year):
+def predict_player_performance(player_id):
     # Retrieve player data from the database
-    player = Player.objects.get(Player=player_name, Tm=team, Year=year)
+    player = Player.objects.get(id=player_id)
     
     # Perform some advanced analysis (e.g., use machine learning model to predict performance)
     # For demonstration purposes, let's assume we're using linear regression to predict points scored
-    X = np.array([[
+    X = np.array([
         player.Age, player.G, player.GS, player.MP, player.FG_percent, player.ThreeP_percent,
         player.FT_percent, player.TRB, player.AST, player.STL, player.BLK
-    ]])  # Remove 'PTS' from features since it's the target variable
-    y = np.array(player.PTS)
+    ]).reshape(1, -1)  # Reshape to a 2D array with one row
+    
+    y = np.array([player.PTS])  # Convert PTS to a 1D array with one element
     
     # Train a linear regression model
     model = LinearRegression()
     model.fit(X, y)
     
     # Make prediction
-    predicted_performance = model.predict(X)  # No need to reshape input data
+    predicted_performance = model.predict(X)[0]  # Extract the predicted value from the array
     
     return predicted_performance
 
-def compare_players(player_name, team, year):
+def compare_players(player_id):
     # Retrieve player data from the database
-    player = Player.objects.get(Player=player_name, Tm=team, Year=year)
+    player = Player.objects.get(id=player_id)
     
     # Get other players data for comparison
-    other_players = MVP.objects.exclude(Player=player_name, Tm=team, Year=year)
+    other_players = Player.objects.exclude(id=player_id)  # Exclude the current player
     
     comparison_results = {}
     for other_player in other_players:
         # Perform comparison based on advanced metrics (e.g., Player Efficiency Rating - PER)
-        player_stats = np.array(player[['PTS', 'TRB', 'AST', 'STL', 'BLK', 'TOV']])
-        other_player_stats = np.array(other_player[['PTS', 'TRB', 'AST', 'STL', 'BLK', 'TOV']])
+        player_stats = np.array([player.PTS, player.TRB, player.AST, player.STL, player.BLK, player.TOV])
+        other_player_stats = np.array([other_player.PTS, other_player.TRB, other_player.AST, other_player.STL, other_player.BLK, other_player.TOV])
         
-        player_per = np.sum(player_stats) / player['MP']
-        other_player_per = np.sum(other_player_stats) / other_player['MP']
+        player_per = np.sum(player_stats) / player.MP
+        player_per_hundered = player_per * 100
+        other_player_per = np.sum(other_player_stats) / other_player.MP
         
         comparison_results[other_player.Player] = {
             'player_per': player_per,
+            'player_per_hundered': player_per_hundered,
             'other_player_per': other_player_per,
             'comparison': 'higher' if player_per > other_player_per else 'lower'
         }
     
     return comparison_results
+
 
 def predict_match_outcome(team1_name, team2_name):
     # Retrieve team data from the database

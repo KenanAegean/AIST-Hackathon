@@ -1,6 +1,7 @@
 from django.db import models
 
 class MVP(models.Model):
+    id = models.AutoField(primary_key=True)
     Rank = models.CharField(max_length=10, default='Rank')
     Player = models.CharField(max_length=100, default='Unknown Player')
     Age = models.FloatField(default=0.0)
@@ -30,6 +31,7 @@ class MVP(models.Model):
         app_label = 'analysis'
 
 class Player(models.Model):
+    id = models.AutoField(primary_key=True)
     Rk = models.FloatField(default=0.0)
     Player = models.CharField(max_length=100, default='Unknown Player')
     Pos = models.CharField(max_length=50, default='Unknown')
@@ -69,6 +71,7 @@ class Player(models.Model):
         app_label = 'analysis'
 
 class Team(models.Model):
+    id = models.AutoField(primary_key=True)
     Team = models.CharField(max_length=100, default='Unknown Team')
     W = models.FloatField(default=0.0)
     L = models.FloatField(default=0.0)
@@ -84,3 +87,4 @@ class Team(models.Model):
     
     class Meta:
         app_label = 'analysis'
+

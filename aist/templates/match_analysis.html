@@ -5,17 +5,17 @@
 {% block content %}
 <!-- Page content -->
 <div class="container">
-    <h2>Match Analysis</h2>
+    <h2>Match Analysis (2021)</h2>
     <form method="post">
         {% csrf_token %}
-        <label for="team1">Select Team 1:</label>
+        <label for="team1">Select Home Team:</label>
         <select id="team1" name="team1">
             {% for team in teams %}
             <option value="{{ team.Team }}">{{ team.Team }}</option>
             {% endfor %}
         </select>
         <br>
-        <label for="team2">Select Team 2:</label>
+        <label for="team2">Select Guest Team:</label>
         <select id="team2" name="team2">
             {% for team in teams %}
             <option value="{{ team.Team }}">{{ team.Team }}</option>
@@ -25,11 +25,11 @@
         <button type="submit">Predict</button>
     </form>
     
-    {% if match_prediction %}
+    {% if dummy %}
     <h2>Match Prediction</h2>
     <p>{{ team1_name }} vs {{ team2_name }}</p>
-    <p>Probability of {{ team1_name }} winning: {{ match_prediction.0.1 }}</p>
-    <p>Probability of {{ team2_name }} winning: {{ match_prediction.0.0 }}</p>
+    <p>Probability of {{ team1_name }} winning: {{ probability_team1_win }}</p>
+    <p>Probability of {{ team2_name }} winning: {{ probability_team2_win }}</p>
     {% endif %}
 </div>
 {% endblock %}

@@ -8,167 +8,53 @@ from .utils import predict_player_performance, compare_players, predict_match_ou
 def main_page(request):
     return render(request, 'main_page.html')
 
-def team_based_analysis(request):
-    teams = Team.objects.all()
-    years = MVP.objects.values_list('year', flat=True).distinct()
 
-    selected_team = request.GET.get('team', '')
-    selected_year = request.GET.get('year', '')
+def player_analysis(request):
+    teams = Player.objects.values_list('Tm', flat=True).distinct()  # Fetch distinct teams
+    filtered_players = []
+    player_details = None
+    predicted_performance = None
+    comparison_results = None
 
-    if not teams.exists() or not years:
-        # Handle the case when the database is empty
-        teams = []
-        years = []
+    if request.method == 'POST':
+        team = request.POST.get('team')
+        year = request.POST.get('year')
 
-    selected_team_data = None
-    selected_year_data = None
+        # Filter players by team and year
+        filtered_players = Player.objects.filter(Tm=team, Year=year)
 
-    try:
-        selected_team_int = int(selected_team)
-        selected_year_int = int(selected_year)
+        if 'player_id' in request.POST:
+            player_id = request.POST.get('player_id')
 
-        selected_team_data = Team.objects.get(id=selected_team_int)
-        selected_year_data = selected_year_int if selected_year_int in years else years[0]
-    except ValueError:
-        pass
+            # Get the selected player's details
+            selected_player = Player.objects.get(id=player_id)
 
-    # Your analysis logic here based on selected_team_data and selected_year_data
+            # Predict player performance
+            predicted_performance = predict_player_performance(player_id)
 
-    return render(request, 'team_based_analysis.html', {
-        'teams': teams,
-        'years': years,
-        'selected_team': selected_team,
-        'selected_year': selected_year,
-        'selected_team_data': selected_team_data,
-        'selected_year_data': selected_year_data,
-    })
+            # Compare players
+            comparison_results = compare_players(player_id)
 
-def player_based_analysis(request):
-    teams = Team.objects.all()
-    years = MVP.objects.values_list('year', flat=True).distinct()
-
-    selected_team = request.GET.get('team', '')
-    selected_year = request.GET.get('year', '')
-
-    if not teams.exists() or not years:
-        # Handle the case when the database is empty
-        teams = []
-        years = []
-
-    selected_team_data = None
-    selected_year_data = None
-
-    try:
-        selected_team_int = int(selected_team)
-        selected_year_int = int(selected_year)
-
-        selected_team_data = Team.objects.get(id=selected_team_int)
-        selected_year_data = selected_year_int if selected_year_int in years else years[0]
-    except ValueError:
-        pass
-
-    players = Player.objects.none()  # Empty queryset by default
-    if selected_team_data and selected_year_data:
-        players = Player.objects.filter(team=selected_team_data, mvp__year=selected_year_data)
+            player_details = selected_player
 
     return render(request, 'player_based_analysis.html', {
         'teams': teams,
-        'years': years,
-        'players': players,
-        'selected_team': selected_team,
-        'selected_year': selected_year,
-        'selected_team_data': selected_team_data,
-        'selected_year_data': selected_year_data,
+        'filtered_players': filtered_players,
+        'player_details': player_details,
+        'predicted_performance': predicted_performance,
+        'comparison_results': comparison_results,
     })
-
-def match_analysis_old(request):
-    teams = Team.objects.all()
-
-    selected_home_team = request.GET.get('team', '')
-    selected_guest_team = request.GET.get('team', '')
-
-    if not teams.count == 0 or not teams:
-        # Handle the case when the database is empty
-        teams = []
-
-    selected_home_team_data = None
-    selected_guest_team_data = None
-
-    try:
-        selected_home_team_int = int(selected_home_team)
-        selected_guest_team_int = int(selected_guest_team)
-        selected_home_team_data = Team.objects.get(id=selected_home_team_int)
-        selected_guest_team_data = Team.objects.get(id=selected_guest_team_int)
-    except ValueError:
-        pass
-    
-    # Your analysis logic here 
-
-    return render(request, 'match_analysis.html', {
-        'teams': teams,
-        'selected_home_team': selected_home_team,
-        'selected_guest_team': selected_guest_team,
-        'selected_home_team_data': selected_home_team_data,
-        'selected_guest_team_data': selected_guest_team_data,
-    })
-
-
-def player_analysis(request):
-    player_team = Player.objects.all()
-    filtered_players = []
-
-    if request.method == 'POST':
-        player_team = Player.objects.all()
-        filtered_players = []
-
-        # Get the selected team and year from the session (if they exist)
-        team = request.session.get('team')
-        year = request.session.get('year')
-
-        if request.method == 'POST':
-            team = request.POST.get('team')
-            year = request.POST.get('year')
-            
-            # Store the selected team and year in the session
-            request.session['team'] = team
-            request.session['year'] = year
-            
-            # Filter players by team and year
-            filtered_players = Player.objects.filter(Tm=team, Year=year).values_list('Player', flat=True)
-
-        if 'player_name' in request.POST:
-            player_name = request.POST.get('player_name')
-
-            # Get the selected player's details
-            selected_player = Player.objects.get(Player=player_name, Tm="TOT", Year="2000")
-            
-            # Predict player performance
-            predicted_performance = predict_player_performance(player_name, "TOT", "2000")
-            
-            # Compare players
-            comparison_results = compare_players(player_name, "2000", "2000")
-            
-            # Retrieve additional player details for display
-            player_details = Player.objects.get(Player=player_name, Tm=team, Year=year)
-            
-            return render(request, 'player_based_analysis.html', {
-                'teams': player_team,
-                'filtered_players': filtered_players,
-                'player_name': player_name,
-                'predicted_performance': predicted_performance,
-                'comparison_results': comparison_results,
-                'player_details': player_details
-            })
-    
-    return render(request, 'player_based_analysis.html', {'teams': player_team, 'filtered_players': filtered_players})
 
 def match_analysis(request):
     teams = Team.objects.all()
+    match_prediction = None
     
     if request.method == 'POST':
         team1_name = request.POST.get('team1')
         team2_name = request.POST.get('team2')
         
+        dummy = Team.objects.all()
+
         # Predict match outcome
         match_prediction = predict_match_outcome(team1_name, team2_name)
         
@@ -178,14 +64,16 @@ def match_analysis(request):
         
         # Pass relevant information to the template
         return render(request, 'match_analysis.html', {
+            'dummy': dummy,
             'teams': teams,
             'team1_name': team1_name,
             'team2_name': team2_name,
+            'match_prediction': match_prediction,
             'probability_team1_win': probability_team1_win,
             'probability_team2_win': probability_team2_win,
         })
     
-    return render(request, 'match_analysis.html', {'teams': teams})
+    return render(request, 'match_analysis.html', {'teams': teams, 'match_prediction': match_prediction})
 
 def team_analysis(request):
     teams = Team.objects.all()
@@ -203,3 +91,6 @@ def team_analysis(request):
         })
     
     return render(request, 'team_based_analysis.html', {'teams': teams})
+
+def dummy(request):
+    return render(request, 'dummy.html')
