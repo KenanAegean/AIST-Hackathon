@@ -6,8 +6,7 @@ def predict_player_performance(player_id):
     # Retrieve player data from the database
     player = Player.objects.get(id=player_id)
     
-    # Perform some advanced analysis (e.g., use machine learning model to predict performance)
-    # For demonstration purposes, let's assume we're using linear regression to predict points scored
+    # Perform some advanced analysis
     X = np.array([
         player.Age, player.G, player.GS, player.MP, player.FG_percent, player.ThreeP_percent,
         player.FT_percent, player.TRB, player.AST, player.STL, player.BLK
@@ -60,8 +59,7 @@ def predict_match_outcome(team1_name, team2_name):
     team1_stats = [team1.WL_percent, team1.PS_per_game, team1.PA_per_game, team1.SRS]
     team2_stats = [team2.WL_percent, team2.PS_per_game, team2.PA_per_game, team2.SRS]
     
-    # Perform some advanced analysis (e.g., use logistic regression to predict match outcome)
-    # For demonstration purposes, let's assume we're predicting based on team statistics
+    # Perform some advanced analysis
     X = np.array([team1_stats, team2_stats])
     
     # Train a logistic regression model
@@ -77,8 +75,7 @@ def predict_team_performance(team_name):
     # Retrieve team data from the database
     team = Team.objects.get(Team=team_name)
     
-    # Perform some advanced analysis (e.g., use linear regression to predict performance)
-    # For demonstration purposes, let's assume we're predicting based on historical team statistics
+    # Perform some advanced analysis
     X = np.array([[team.Year, team.WL_percent, team.PS_per_game, team.PA_per_game, team.SRS]])
     y = np.array([team.W])
     
