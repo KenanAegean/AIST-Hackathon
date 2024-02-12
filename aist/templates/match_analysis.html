@@ -6,9 +6,15 @@
 <!-- Page content -->
 <div class="container">
     <h2>Match Analysis (2021)</h2>
-    <p>This page helps users predict match outcomes by analyzing historical team statistics. 
+    <p>This page helps users predict 
+        <b class="text-primary" style="display: inline;">match outcomes</b>
+         by analyzing historical team statistics. 
         Users pick two teams from a dropdown menu on a webpage and submit their choices. The page then sends these team names to the server.</p>
-    <p>Using logistic regression, the page analyzes stats like win-loss percentage, points scored and allowed per game, and Simple Rating page (SRS) for the selected teams. 
+    <p>Using 
+        <b class="text-primary" style="display: inline;">logistic regression</b>
+        , the page analyzes stats like 
+        <b class="text-primary" style="display: inline;">win-loss percentage, points scored and allowed per game, and Simple Rating page (SRS)</b> 
+        for the selected teams. 
         These stats are pulled from a database. The page trains a model using these features and predicts the probabilities of each team winning. Users see these predicted probabilities, helping them make informed decisions about the match's potential outcome.</p> 
     <br>
     <form method="post">
