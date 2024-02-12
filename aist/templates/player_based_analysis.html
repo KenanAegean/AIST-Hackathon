@@ -6,6 +6,13 @@
     <!-- Page content -->
     <div class="container">
         <h2>Player Analysis</h2>
+        <p>This page helps users analyze basketball players' performance. Users can choose a team and year, then pick a specific player to analyze. 
+            The system shows detailed player information like position, age, and team, and predicts their performance using a linear regression model based on stats like games played, minutes played, shooting percentages, rebounds, assists, steals, and blocks.</p>
+        <p>It also compares the selected player's performance with others using metrics like Player Efficiency Rating (PER), showing if they perform better or worse than average.</p>
+        <p>Once a player is selected, the system displays detailed information about the player, including their position, age, and team. 
+            Additionally, it predicts the player's performance using a machine learning model (in this case, a linear regression model) based on various player statistics such as games played, minutes played, shooting percentages, rebounds, assists, steals, and blocks.</p>
+        <p>Overall, it helps coaches, analysts, and fans understand player performance better.</p>
+        <br>
         <form method="post">
             {% csrf_token %}
             <label for="team">Select Team:</label>
