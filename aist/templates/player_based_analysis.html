@@ -70,7 +70,7 @@
         <h2>Comparison with Other Players (Player Efficiency Rating)</h2>
         <ul>
             {% for player, data in comparison_results.items %}
-            <li>{{ player }}: {{ data.player_per }} vs {{ data.other_player_per }} ({{ data.comparison }})</li>
+            <li>{{ player }}: %{{ data.player_per_hundered|floatformat:"2" }} vs %{{ data.other_player_per_hundered|floatformat:"2" }} ({{ data.comparison }})</li>
             {% endfor %}
         </ul>
         {% endif %}        

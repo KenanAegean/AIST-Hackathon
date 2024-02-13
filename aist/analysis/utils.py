@@ -39,11 +39,13 @@ def compare_players(player_id):
         player_per = np.sum(player_stats) / player.MP
         player_per_hundered = player_per * 100
         other_player_per = np.sum(other_player_stats) / other_player.MP
+        other_player_per_hundered = other_player_per * 100
         
         comparison_results[other_player.Player] = {
             'player_per': player_per,
             'player_per_hundered': player_per_hundered,
             'other_player_per': other_player_per,
+            'other_player_per_hundered': other_player_per_hundered,
             'comparison': 'higher' if player_per > other_player_per else 'lower'
         }
     

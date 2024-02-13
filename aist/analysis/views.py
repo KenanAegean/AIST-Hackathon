@@ -61,6 +61,8 @@ def match_analysis(request):
         # Extract relevant information from prediction probabilities
         probability_team1_win = match_prediction[0][1]
         probability_team2_win = match_prediction[0][0]
+        probability_team1_win_hundered = probability_team1_win * 100
+        probability_team2_win_hundered = probability_team2_win * 100
         
         # Pass relevant information to the template
         return render(request, 'match_analysis.html', {
@@ -71,6 +73,8 @@ def match_analysis(request):
             'match_prediction': match_prediction,
             'probability_team1_win': probability_team1_win,
             'probability_team2_win': probability_team2_win,
+            'probability_team1_win_hundered': probability_team1_win_hundered,
+            'probability_team2_win_hundered': probability_team2_win_hundered,
         })
     
     return render(request, 'match_analysis.html', {'teams': teams, 'match_prediction': match_prediction})
