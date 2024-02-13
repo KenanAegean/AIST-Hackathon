@@ -50,9 +50,11 @@
         
         {% if player_details %}
         <h2>Player Details</h2>
+        <p>Name: {{ player_details }}</p>
         <p>Position: {{ player_details.Pos }}</p>
         <p>Age: {{ player_details.Age }}</p>
         <p>Team: {{ player_details.Tm }}</p>
+        <p>Year: {{ player_details.Year|floatformat:"0" }}</p>
         <!-- Add more player details as needed -->
         {% endif %}
         

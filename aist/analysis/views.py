@@ -38,6 +38,7 @@ def player_analysis(request):
             player_details = selected_player
 
     return render(request, 'player_based_analysis.html', {
+        'year': year,
         'teams': teams,
         'filtered_players': filtered_players,
         'player_details': player_details,
