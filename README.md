@@ -20,30 +20,27 @@ To open and run this project on your local machine, follow these steps:
 To open and run this project on your local machine, follow these steps:
 
 1. **Clone the Repository:**
-   Clone this repository to your local and locate there.
+   Clone this repository to your local and locate under aist folder.
+   ```bash
+   cd aist
+   ```
 
-2. **Install Dependencies:**
+3. **Install Dependencies:**
    Navigate to the project directory and install the required dependencies. You can do this using pip, Python's package manager. Run:
    ```bash
    pip install -r requirements.txt
    ```
    This will install all the necessary Python packages specified in the `requirements.txt` file.
 
-3. **Run the Development Server:**
-   Dirst need to locate project folder
-   ```bash
-   cd aist
-   ```
-
+4. **Run the Development Server:**
    Start the Django development server by running:
    ```bash
    python manage.py runserver
    ```
    This will start the server locally, typically on `http://127.0.0.1:8000/`.
 
-4. **Access the Application:**
+5. **Access the Application:**
    Once the server is running, open your web browser and navigate to `http://127.0.0.1:8000/` to access the application.
-
 
 
 <br><b>Some Screenshots</b>
