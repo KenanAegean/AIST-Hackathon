@@ -20,11 +20,7 @@ To open and run this project on your local machine, follow these steps:
 To open and run this project on your local machine, follow these steps:
 
 1. **Clone the Repository:**
-   Clone this repository to your local machine using the following command:
-   ```bash
-   git clone <repository_url>
-   ```
-   Replace `<repository_url>` with the URL of this GitHub repository.
+   Clone this repository to your local and locate there.
 
 2. **Install Dependencies:**
    Navigate to the project directory and install the required dependencies. You can do this using pip, Python's package manager. Run:
